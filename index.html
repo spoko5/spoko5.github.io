@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Karta</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    background: #101010;
+    color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.card {
+    width: 900px;
+    max-width: 100%;
+    background: #1b1b1b;
+    border: 1px solid #333;
+    border-radius: 18px;
+    padding: 25px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 25px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+}
+
+.photo {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    border-radius: 12px;
+    background: #292929;
+}
+
+.content h1 {
+    margin: 0 0 20px;
+    font-size: 30px;
+}
+
+.data {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.item {
+    background: #242424;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.label {
+    color: #888;
+    font-size: 11px;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.value {
+    font-size: 15px;
+    word-break: break-word;
+}
+
+@media (max-width: 650px) {
+    .card {
+        grid-template-columns: 1fr;
+    }
+
+    .photo {
+        max-width: 220px;
+        margin: auto;
+    }
+
+    .data {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+    <img id="photo" class="photo" alt="Zdjęcie">
+
+    <div class="content">
+
+        <h1 id="title">Karta</h1>
+
+        <div id="data" class="data"></div>
+
+    </div>
+
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+
+const fields = [
+
+    ["Płeć", "sex"],
+    ["Imię", "name"],
+    ["Nazwisko", "surname"],
+    ["Data urodzenia", "birthday"],
+    ["Narodowość", "nationality"],
+    ["Nazwisko rodzinne", "familyName"],
+    ["Nazwisko ojca", "fathersFamilyName"],
+    ["Nazwisko matki", "mothersFamilyName"],
+    ["Miejsce urodzenia", "birthPlace"],
+    ["Kraj urodzenia", "countryOfBirth"],
+    ["Adres", "adress1"],
+    ["Kod pocztowy", "adress2"],
+    ["Miasto", "city"]
+
+];
+
+const image = params.get("image");
+
+if (image) {
+    document.getElementById("photo").src = image;
+}
+
+const name = params.get("name") || "";
+const surname = params.get("surname") || "";
+
+const fullName = (name + " " + surname).trim();
+
+document.getElementById("title").textContent =
+    fullName || "Karta";
+
+const data = document.getElementById("data");
+
+fields.forEach(function(field) {
+
+    const label = field[0];
+    const key = field[1];
+
+    const value = params.get(key);
+
+    if (value !== null && value !== "") {
+
+        const item = document.createElement("div");
+
+        item.className = "item";
+
+        const labelElement = document.createElement("div");
+        labelElement.className = "label";
+        labelElement.textContent = label;
+
+        const valueElement = document.createElement("div");
+        valueElement.className = "value";
+        valueElement.textContent = value;
+
+        item.appendChild(labelElement);
+        item.appendChild(valueElement);
+
+        data.appendChild(item);
+    }
+
+});
+
+</script>
+
+</body>
+</html>
